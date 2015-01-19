@@ -3,12 +3,13 @@
  *
  * Name all variables as their club name
  */
-var ElectronicsClub = {
+var orgs = {};
+orgs['ElectronicsClub'] = {
   googleCalendarId: 'electronicsosu@gmail.com',
   timezone: 'America/New_York'
 };
 
-var AmateurRadioClub = {
+orgs['AmateurRadioClub'] = {
   googleCalendarId: '45qblop08sqnk5fcvb7hb4kkq0@group.calendar.google.com',
   timezone: 'America/New_York'
 }
@@ -26,17 +27,16 @@ $(document).ready(function() {
   });
 
   // Add all calendars by default
-  $('#calendar').fullCalendar('addEventSource', ElectronicsClub);
-  $('#calendar').fullCalendar('addEventSource', AmateurRadioClub);
+  for (var org in orgs) {
+    $('#calendar').fullCalendar('addEventSource', orgs[org]);
+  };
 
-  // Doesn't work for some reason
-  $(":checkbox").parent().click(function(evt) {
-    if (evt.target.type !== 'checkbox') {
-      if($(this).find('checkbox').is(":checked")) {
-        $('#calendar').fullCalendar('addEventSource', $(this).attr('id'));
-      } else {
-        $('#calendar').fullCalendar('removeEventSoruce', $(this).attr('id'))
-      }
+  $("input[type='checkbox']").on('change', function(){
+    var org_name = $(this).attr('name');
+    if (this.checked) {
+      $('#calendar').fullCalendar('addEventSource', orgs[org_name]);
+    } else {
+      $('#calendar').fullCalendar('removeEventSource', orgs[org_name]);
     }
   });
 });
